@@ -1,0 +1,193 @@
+-- INSERCION DE DATOS.
+INSERT INTO clientes (Razon_social, NIF, Dirección, Email_contacto) values
+("Edenor SA", 3060447825, "Av Esnaola 951,Capital Federal", "info@edenor.com.ar"),
+("Edesur SA", 30600447245, "Av Del Libertador 520, Capital Federal", "info@edesur.com.ar"),
+("Naturgy SA", 3347006598, "Av San Martin 4152, Munro, Buenos Aires", "info@naturgy.com.ar"),
+("AYSA SA", 30725447625 , "Av De Los Incas, Capital Federal", "aysa@consultas.com.ar"),
+("AXION SA", 30726998475, "Av Gaona 425, Capital Federal", "axion@diesel.com.ar"),
+("EPEC SA", 307296478522,  "Potosi 2564, Cordoba Capital", "epec@energia.com.ar");
+
+
+INSERT INTO SOCIEDAD (id_sociedad, Nombre ) VALUES
+(1000,"CONSTRUCTORA SOL");
+
+INSERT INTO servicios (id_servicios,Descripcion, Precio) values
+(1,"Reparacion de Veredas", 4100),
+(2,"Trabajos de Alta Tensión", 2600),
+(3,"Cambio de medidores", 1800),
+(4,"Recambio de tapas", 1200),
+(5,"Instalacion de redes de agua", 1450);
+
+
+INSERT INTO hist_serv (fecha_serv, servicios_id, clientes_id) values
+("2024-11-24", 2, 4),
+("2023-12-24",2,3),
+("2024-08-23",5,6),
+("2022-09-19",2,4),
+("2020-09-04",4,5),
+("2020-05-06",2,1),
+("2024-06-06",1,2),
+("2023-09-09",3,6);
+
+INSERT INTO tipo_veh (id_tipo, Descripcion) values
+(1, "Liviano"),
+(2, "Pesado"),
+(3, "Compacto");
+
+
+INSERT INTO sector (Operación) VALUES 
+("Edenor"),
+("Edesur"),
+("Tendidos electricos"),
+("Aysa"),
+("Administración"),
+("Red de Gas"),
+("Reparacion Veredas"),
+("Taller/Rep Flotas"), 
+("Logistica")
+;
+
+
+
+describe proveedores;
+alter table proveedores modify column NIF varchar (20);
+
+INSERT INTO proveedores (Razon_social, NIF, Direccion, email_prov) values 
+("PPI Maquinas", "30500258578", "Av Las Heras 2758, Capital Federal", "info@ppi.com.ar"),
+("Tecnica Sur Construcciones", "2057849250", "Av Belgrano 2859, Capital Federal", "info@tecni-sur.com.ar"),
+("Conectec SA", "3367598562", "Sarandi 1266, Capital Federal", "info@conectec.com.ar"),
+("Lifercol", "27962483259", "Av Independencia 2561, Capital Federal", "info@lifercol.com.ar"),
+("Gamax Calzados", "2934568957", "Jose Hernandez 2651, Capital Federal", "info@gamaxcalzados.com.ar"),
+("Soluciones Quimicas", "3379856748", "San Jose de Calazans 361, Capital Federal", "info@solucionesquimicas.com.ar");
+
+INSERT INTO stock (id_material_stock, Material, Stock) values
+(1, "Arena fina", 30),
+(2, "Ladrillos", 1200),
+(3, "Botas de seguridad", 500),
+(4, "Arnes de Seguridad", 400),
+(5, "Taladros",1200),
+(6, "Tornillos", 20000),
+(7, "Medidores", 1200),
+(8, "Tubos PVC", 2500);
+
+DESCRIBE COMPRAS;
+ALTER TABLE COMPRAS MODIFY PRECIO FLOAT;
+INSERT INTO compras (proveedores_id, stock_id, Fecha, Cantidad, Precio) values
+(1,6, "2024-11-24", 15, 1250.20),
+(2,2, "2023-10-20", 5000, 38.22),
+(4,6, "2024-01-22",16,446.36),
+(6,7, "2023-05-26", 20000, 18.22),
+(3,3, "2022-06-18", 500, 450.20),
+(5,1, "2023-08-19", 30, 1220.56),
+(3,4, "2022-09-16", 30, 1214.90);
+
+describe empleados;
+INSERT INTO empleados (Contacto_id, Nombre, Apellido, sector_id) values 
+(1, "Enrique", "Rodriguez", 6),
+(2, "Manuel", "Serrano", 5),
+(3, "Nahuel", "Ramirez", 8),
+(4, "Adriana", "Gomez", 5),
+(5, "Miguel", "Huamani",2),
+(6, "Andres", "Tovar", 1),
+(7, "Gabriel", "Vaamonde",3),
+(8, "Valentina", "Perez", 7),
+(9, "Omar", "Prieto", 4);
+
+
+
+INSERT INTO contactos (Telefono, Email)values
+(1170967605, "erodriguez@const.com.ar"),
+(1120758695, "mserrano@const.com.ar"),
+(1150476590, "nramirez@const.com.ar"),
+(1120569874, "agomez@const.com.ar"),
+(1150748596, "mhuamani@const.com.ar"),
+(1126760548, "atovar@const.com.ar"),
+(1150869473, "gvaamonde@const.com.ar"),
+(1150896750, "vperez@const.com.ar"),
+(1136295785, "oprieto@const.com.ar");
+
+
+DESCRIBE FLOTA;
+INSERT INTO FLOTA (marca, modelo, anio, patente, sector_id, tipo_id) VALUES 
+("Fiat", "Fiorino", "2022", "AG875QQ", 2,1),
+("Peugeot", "Partner","2021", "AK866KG",3,1),
+("Volskwagen", "Constellation","1999", "HGK849", 1,2),
+("Ford", "F-250", "2023","CLGHV7",5,2),
+("Toyota", "Etios","2024", "AG790YT", 6,1),
+("Peugeot", "208","2022", "AF875TK",7,1);
+
+
+
+-- CREACION DE FORMULAS--
+
+-- FUNCION PARA ENCONTRAR EL SERVICIO MAS CARO
+DELIMITER $$
+CREATE FUNCTION EncontrarServicioMasCaro() RETURNS VARCHAR(50)
+DETERMINISTIC 
+BEGIN
+    DECLARE servicio_mas_caro VARCHAR(50);
+    SELECT Descripcion INTO servicio_mas_caro FROM SERVICIOS 
+    ORDER BY Precio DESC LIMIT 1;
+    RETURN servicio_mas_caro;
+END;
+$$
+
+SELECT EncontrarServicioMasCaro(); 
+
+
+
+
+DELIMITER //
+CREATE FUNCTION ObtenerInventarioPorNombre(productoNombre VARCHAR(50))
+RETURNS INT
+DETERMINISTIC 
+BEGIN
+    DECLARE cantidad INT;
+    SELECT SUM(Stock)
+    INTO cantidad
+    FROM stock
+    WHERE Material = productoNombre;
+    RETURN cantidad;
+END //
+DELIMITER ;
+
+SELECT ObtenerInventarioPorNombre ("Arena fina");
+
+
+
+-- CREACION DE UN TRIGGER 
+
+
+-- STORED PROCEDURES 
+
+
+
+-- SP PARA ELIMINAR CLIENTES MEDIANTE ID 
+
+DROP PROCEDURE IF EXISTS EliminarCliente;
+
+DELIMITER //
+CREATE PROCEDURE EliminarCliente(IN p_ClienteId INT)
+BEGIN
+    DELETE FROM CLIENTES WHERE id_clientes = p_ClienteId;
+END //
+DELIMITER ; 
+
+CALL ELIMINARCLIENTE (13);
+SELECT*FROM CLIENTES;
+
+
+
+-- VISTAS
+
+-- VISTA COMPRAS POR PROVEEDOR
+CREATE OR REPLACE VIEW VistaComprasTotalesPorProveedor AS
+SELECT
+    P.Razon_social AS NombreProveedor,
+    SUM(C.Cantidad) AS TotalCompras
+FROM PROVEEDORES P
+LEFT JOIN compras c ON p.id_proveedor = c.proveedores_id
+GROUP BY p.Razon_social;
+-- SELECT * FROM VistaComprasTotalesPorProveedor.
+
+SELECT * FROM vistacomprastotalesporproveedor;
