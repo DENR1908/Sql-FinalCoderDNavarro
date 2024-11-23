@@ -1,0 +1,113 @@
+-- CREACIÓN DB
+CREATE DATABASE CONSTRUCTORA_SOL;
+USE CONSTRUCTORA_SOL;
+-- CREACIÓN DE TABLAS
+
+CREATE TABLE sociedad (
+id_sociedad INT NOT NULL,
+Nombre varchar(30)
+);
+
+CREATE TABLE clientes (
+id_clientes INT NOT NULL AUTO_INCREMENT,
+Razon_social varchar (30),
+NIF INT NOT NULL,
+Dirección varchar (50),
+Email_contacto varchar(50),
+CONSTRAINT PK_CLIENTES PRIMARY KEY (id_clientes) 
+); 
+
+CREATE TABLE servicios (
+id_servicios INT NOT NULL,
+Descripcion varchar (50),
+Precio int not null,
+CONSTRAINT PK_SERVICIOS PRIMARY KEY (id_servicios)
+);
+
+
+CREATE TABLE hist_serv (
+id_historial INT NOT NULL AUTO_INCREMENT,
+Fecha_serv DATE NOT NULL,
+servicios_id INT NOT NULL, 
+clientes_id INT NOT NULL,
+CONSTRAINT PK_HIST PRIMARY KEY (id_historial),
+CONSTRAINT FK_HIST FOREIGN KEY (servicios_id) REFERENCES servicios (id_servicios),
+CONSTRAINT FK_HIST_CL FOREIGN KEY (clientes_id) REFERENCES clientes (id_clientes)
+);
+
+CREATE TABLE proveedores (
+id_proveedor INT NOT NULL AUTO_INCREMENT,
+Razon_social varchar (40),
+NIF INT NOT NULL,
+Direccion varchar (50),
+email_prov varchar (50),
+CONSTRAINT PK_PROV PRIMARY KEY (id_proveedor)
+);
+
+
+CREATE TABLE compras (
+id_compras INT NOT NULL AUTO_INCREMENT,
+proveedores_id INT NOT NULL,
+stock_id INT NOT NULL,
+Fecha DATE NOT NULL,
+Cantidad INT NOT NULL,
+Precio INT NOT NULL,
+CONSTRAINT PK_COMP PRIMARY KEY (id_compras),
+CONSTRAINT FK_COMP_PROV FOREIGN KEY (proveedores_id) REFERENCES proveedores (id_proveedor),
+CONSTRAINT FK_COMP_STOCK FOREIGN KEY (stock_id) REFERENCES stock (id_material_stock)
+);
+
+
+CREATE TABLE stock (
+id_material_stock INT NOT NULL,
+Material varchar (30),
+Stock INT NOT NULL, 
+CONSTRAINT PK_STOCK PRIMARY KEY (id_material_stock)
+);
+
+CREATE TABLE empleados (
+id_empleados INT NOT NULL AUTO_INCREMENT,
+Contacto_id INT NOT NULL,
+Nombre varchar (30),
+Apellido varchar (40),
+sector_id INT NOT NULL,
+CONSTRAINT PK_EMPL PRIMARY KEY (id_empleados),
+CONSTRAINT FK_EMPL_CONT FOREIGN KEY (contacto_id) REFERENCES contactos (id_contacto),
+CONSTRAINT FK_EMPL_SECT FOREIGN KEY (sector_id) REFERENCES sector (id_sector)
+);
+
+
+CREATE TABLE contactos (
+id_contacto INT NOT NULL auto_increment,
+Telefono INT,
+Email varchar (30),
+CONSTRAINT PK_CONTACTOS PRIMARY KEY (id_contacto)	
+);
+-- EL SECTOR PERMITE CLASIFICAR COSTOS Y PROMEDIOS DE LA EMPRESA POR OPERACIONES U CENTROS DE COSTO
+
+CREATE TABLE sector (
+id_sector INT NOT NULL AUTO_INCREMENT,
+Operación VARCHAR (30),
+CONSTRAINT PK_SECT PRIMARY KEY (id_sector)
+);
+
+
+CREATE TABLE flota (
+id_veh INT NOT NULL auto_increment,
+marca varchar (20),
+modelo varchar (20),
+anio varchar (4),
+patente varchar (7),
+sector_id INT NOT NULL,
+tipo_id INT NOT NULL,
+CONSTRAINT PK_FLOTA PRIMARY KEY (id_veh),
+CONSTRAINT FK_FLOTA_SECTOR foreign key (sector_id) REFERENCES sector (id_sector)
+);
+
+CREATE TABLE tipo_veh (
+id_tipo INT NOT NULL AUTO_INCREMENT,
+Descripcion varchar (30),
+CONSTRAINT PK_TIPOVEH PRIMARY KEY (id_tipo)
+);
+
+ALTER TABLE CLIENTES MODIFY COLUMN NIF VARCHAR (30);
